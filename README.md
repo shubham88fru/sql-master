@@ -8,8 +8,9 @@ Order of execution of SQL commands/clauses:
 4. GROUP BY
 5. HAVING
 6. SELECT
-7. ORDER BY
-8. LIMIT
+7. DISTINCT
+8. ORDER BY
+9. LIMIT, TOP
 
 # 1. Creating a table
 
@@ -144,4 +145,42 @@ WHERE PRODUCT_NAME='PAJAMAS';
 UPDATE AMAZON_ORDERS
 SET DISCOUNT=25
 WHERE ORDER_ID=20;
+```
+
+# 13. SELECT Statement in depth
+
+```sql
+SELECT *
+FROM ORDERS
+WHERE CUSTOMER_NAME LIKE 'A_a%'
+ORDER BY CUSTOMER_NAME;
+```
+
+```sql
+SELECT DISTINCT ORDER_DATE FROM ORDERS
+ORDER BY ORDER_DATE
+
+--distinct combination
+SELECT DISTINCT ORDER_DATE, ORDER_NAME
+FROM ORDERS
+ORDER BY ORDER_DATE
+
+--check duplicate rows (Only those rows which are exactly same will not be selected here)
+SELECT DISTINCT *
+FROM ORDERS;
+```
+
+```sql
+--filters
+SELECT *
+FROM ORDERS
+WHERE SHIP_MODE = 'First Class';
+
+
+--Order of execution:
+--FROM, WHERE, SELECT , ORDER BY, TOP 5
+SELECT TOP 5 ORDER_DATE, QUANTITY
+FROM ORDERS
+WHERE QUANTITY >= 5
+ORDER BY QUANTITY;
 ```
