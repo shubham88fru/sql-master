@@ -218,4 +218,61 @@ SELECT *
 FROM ORDERS
 WHERE CUSTOMER_NAME like 'C[a-f]%'
 
+--not like
+SELECT *
+FROM ORDERS
+WHERE CUSTOMER_NAME NOT LIKE 'A%n';
+
+SELECT *
+FROM ORDERS
+WHERE NOT (CUSTOMER_NAME LIKE 'A%' AND CUSTOMER_NAME LIKE '%n');
+
+
+--null values in where. (can't do with `=`, need to use NOT NULL)
+SELECT *
+FROM ORDERS
+WHERE CITY IS NOT NULL;
+
+SELECT *
+FROM ORDERS
+WHERE CITY IS NULL;
+
+```
+
+# 14. Aggregation in depth
+
+```sql
+
+--num of records in table
+SELECT COUNT(*) as cnt
+FROM ORDERS;
+
+--sum all the values in SALES column.
+SELECT SUM(SALES) as total_sales
+FROM ORDERS;
+
+--select max, min and avg values.
+SELECT MAX(SALES) as max_sale, MIN(PROFIT) as min_sale, AVG(PROFIT) as avg_profit
+FROM ORDERS;
+
+--all the aggregations in the select will be at region level (for each region)
+SELECT REGION, COUNT(*) as cnt, SUM(SALES) as total_sales,
+MAX(SALES) as max_sales, MIN(PROFIT) as min_profit
+FROM ORDERS
+GROUP BY REGION;
+
+--When using a non aggreate column in SELECT, it must be present in GROUP BY as well.
+SELECT REGION, CATEGORY, SUM(SALES) as total_sales
+FROM ORDERS
+GROUP BY REGION, CATEGORY;
+
+
+--order of execution:
+--FROM, WHERE, GROUP BY, AGGREGATE, SELECT, ORDER BY, TOP
+SELECT TOP 2 REGION, SUM(SALES) as total_sales
+FROM ORDERS
+WHERE PROFIT > 50
+GROUP BY REGION
+ORDER BY total_sales DESC;
+
 ```
