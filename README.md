@@ -183,4 +183,39 @@ SELECT TOP 5 ORDER_DATE, QUANTITY
 FROM ORDERS
 WHERE QUANTITY >= 5
 ORDER BY QUANTITY;
+
+-- multiple values for same column - use `IN`
+SELECT *
+FROM ORDERS
+WHERE SHIP_MODE IN ('First Class' , 'Same Day');
+
+SELECT *
+FROM ORDERS
+WHERE SHIP_MODE = 'First Class' and SEGMENT = 'Consumer';
+
+-- multiple values for different columns - use `OR`
+SELECT *
+FROM ORDERS
+WHERE SHIP_MODE = 'First Class' OR SEGMENT = 'Consumer';
+
+--second character is `l` (add suitable number of underscore)
+SELECT *
+FROM ORDERS
+WHERE CUSTOMER_NAME like '_l%';
+
+--third char should be either a/l/b
+SELECT *
+FROM ORDERS
+WHERE CUSTOMER_NAME like 'Co[alb]%';
+
+--second character should not be a/l/b/o
+SELECT *
+FROM ORDERS
+WHERE CUSTOMER_NAME like 'C[^alb]%';
+
+--second character can be anything between a-f
+SELECT *
+FROM ORDERS
+WHERE CUSTOMER_NAME like 'C[a-f]%'
+
 ```
