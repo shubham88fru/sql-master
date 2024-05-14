@@ -12,6 +12,13 @@ Order of execution of SQL commands/clauses:
 8. ORDER BY
 9. LIMIT, TOP
 
+When it comes to writing SQL, there are two kinds of orders.
+First, the order in which the commands/clauses are executed,
+and Second, the order in which they can be written. Both are
+different. A command having higher priority can be come later than a command than that has lower priority. E.g. SELECT has lower priority than WHERE but we can't write a query with WHERE clause first and SELECT later. Commands and clauses can only
+be written in a certain order (i.e. what commes after what etc.).
+When writing queries, we have to be wary of both the orders - how they execute in relation to each other and what positions they can be written in relation to each other.
+
 # 1. Creating a table
 
 ```sql
@@ -275,4 +282,29 @@ WHERE PROFIT > 50
 GROUP BY REGION
 ORDER BY total_sales DESC;
 
+
+--HAVING clause. Used when filtering on aggregated values.
+--Can't use WHERE clause on Aggreate funcs.
+--i.e. When filtering on a column of table, use WHERE
+--and when filtering on a aggregated function, use HAVING.
+--Order of execution:
+--FROM, GROUP BY, HAVING, SELECT, ORDER BY.
+SELECT SUB_CATEGORY, SUM(SALES) as total_sales
+FROM ORDERS
+GROUP BY SUB_CATEGORY
+HAVING SUM(SALES) > 100000
+ORDER BY total_sales DESC;
+
+--Order of execution:
+--FROM, WHERE, GROUP BY, HAVING, SELECT, ORDER BY, TOP
+SELECT TOP 5 SUB_CATEGORY, SUM(SALES) as total_sales
+FROM ORDERS
+WHERE PROFIT > 50
+GROUP BY SUB_CATEGORY
+HAVING SUM(SALES) > 100000
+ORDER BY total_sales DESC;
+
+--count doesn't count null values if present in the column.
+SELECT COUNT(CITY)
+FROM ORDERS
 ```
