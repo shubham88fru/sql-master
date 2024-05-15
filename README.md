@@ -308,3 +308,36 @@ ORDER BY total_sales DESC;
 SELECT COUNT(CITY)
 FROM ORDERS
 ```
+
+# 15. Joins in Depth
+
+```sql
+--For Joins, in general, the table that comes
+--before the JOIN keyword is the left table
+--and the table that comes after the JOIN keyword
+--is the right table.
+
+
+--Inner join orders table with returns table.
+--With inner join, only intersection area (i.e. present in both) tables is shown.
+SELECT o.ORDER_ID, o.PRODUCT_ID, r.RETURN_REASON
+FROM ORDERS o
+INNER JOIN RETURN_ORDERS r ON o.ORDER_ID = r.ORDER_ID
+
+--Left join
+--With left join, well get a row for each row of the
+--left table even if there's no match. When there's no
+--match, the values of the right table's column will be NULL.
+SELECT o.ORDER_ID, o.PRODUCT_ID, r.RETURN_REASON
+FROM ORDERS o
+LEFT JOIN RETURN_ORDERS r ON o.ORDER_ID = r.ORDER_ID
+
+--Get the orders that aren't present in RETURN_ORDERS table.
+--Order or execution:
+--FROM, JOIN, WHERE, SELECT.
+SELECT o.ORDER_ID, o.PRODUCT_ID, r.RETURN_REASON
+FROM ORDERS o
+LEFT JOIN RETURN_ORDERS r ON o.ORDER_ID = r.ORDER_ID
+WHERE r.RETURN_REASON is NULL
+
+```
