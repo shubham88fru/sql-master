@@ -41,6 +41,7 @@ DROP TABLE AMAZON_ORDERS;
 # 3. Inserting into the table
 
 ```sql
+--inserts two rows
 INSERT INTO amazon_orders VALUES
 (
     1,
@@ -48,6 +49,12 @@ INSERT INTO amazon_orders VALUES
     'Baby Milk',
     30.50,
     'UPI'
+), (
+    2,
+    '2023-11-11',
+    'Soap',
+    12.00,
+    'Bank'
 );
 ```
 
@@ -319,10 +326,10 @@ FROM ORDERS
 
 
 --Inner join orders table with returns table.
---With inner join, only intersection area (i.e. present in both) tables is shown.
+--With inner join, only intersection area (i.e. present in both) tables is shown. Default join is inner join.
 SELECT o.ORDER_ID, o.PRODUCT_ID, r.RETURN_REASON
 FROM ORDERS o
-INNER JOIN RETURN_ORDERS r ON o.ORDER_ID = r.ORDER_ID
+INNER JOIN RETURN_ORDERS r ON o.ORDER_ID = r.ORDER_ID --order in this `=` doesn't matter. What matters is the type of JOIN  (LEFT, RIGHT, INNER, etc.) and the table that comes before the join (in left join) or the table that comes after join (in right join).
 
 --Left join
 --With left join, well get a row for each row of the
@@ -338,6 +345,24 @@ LEFT JOIN RETURN_ORDERS r ON o.ORDER_ID = r.ORDER_ID
 SELECT o.ORDER_ID, o.PRODUCT_ID, r.RETURN_REASON
 FROM ORDERS o
 LEFT JOIN RETURN_ORDERS r ON o.ORDER_ID = r.ORDER_ID
-WHERE r.RETURN_REASON is NULL
+WHERE r.RETURN_REASON is NULL;
 
+--cross join (join every record on table1 to every record of table2)
+SELECT *
+FROM EMPLOYEE
+INNER JOIN DEPT ON 1=1 --always true
+ORDER BY EMPLOYEE.EMP_ID
+
+--full outer join.
+--Sort of a union (BUT NOT UNION). Intersection (inner join), (left join) plus all items in left (non matching in right will be NULL), (right join) plus all items in right (non matching in left will be NULL).
+SELECT *
+FROM DEPT d
+FULL OUTER JOIN EMPLOYEE e ON e.dept_id = d.dept_id;
+
+--multiple joins (can join as many tables as we want. No limit.)
+--First ORDERS and RETURN_ORDERS will be joined, then the resultant will be joined with the next join and so on and so forth.
+SELECT o.ORDER_ID, o.PRODUCT_ID, r.RETURN_REASON, p.MANAGER
+FROM ORDERS o
+INNER JOIN RETURN_ORDERS r ON o.order_id=r.order_id
+INNER JOIN PEOPLE p ON o.region=p.region;
 ```
