@@ -375,4 +375,10 @@ SELECT o.ORDER_ID, o.PRODUCT_ID, r.RETURN_REASON, p.MANAGER
 FROM ORDERS o
 INNER JOIN RETURN_ORDERS r ON o.order_id=r.order_id
 INNER JOIN PEOPLE p ON o.region=p.region;
+
+--self join. Join a table with itself (using INNER JOIN, LEFT JOIN etc.) Its like making two copies of the same table and joining them. Idea of self referencing (good database design technique)
+--Usually used when we have columns in table referening to another column of the same table. e.g employee table will have emp_id, emp_name and manager_id. manager_id is basically referring to emp_id column because every manager is also an employee.
+SELECT e1.EMP_ID, e1.EMP_NAME as employee_name, e2.EMP_NAME as manager_name
+FROM EMPLOYEE e1
+INNER JOIN EMPLOYEE e2 on e1.MANAGER_ID=e2.EMP_ID;
 ```
