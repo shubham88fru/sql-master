@@ -359,6 +359,16 @@ SELECT *
 FROM DEPT d
 FULL OUTER JOIN EMPLOYEE e ON e.dept_id = d.dept_id;
 
+--print names of the departments where
+--none of the employees have the same salary.
+--order of execution:
+--FROM, JOIN, GROUP BY, HAVING, SELECT.
+SELECT d.DEP_NAME
+FROM EMPLOYEES e
+LEFT JOIN DEPT d ON e.DEPT_ID = d.DEP_ID
+GROUP BY d.DEP_ID
+HAVING COUNT(DISTINCT SALARY) = COUNT(1)
+
 --multiple joins (can join as many tables as we want. No limit.)
 --First ORDERS and RETURN_ORDERS will be joined, then the resultant will be joined with the next join and so on and so forth.
 SELECT o.ORDER_ID, o.PRODUCT_ID, r.RETURN_REASON, p.MANAGER
