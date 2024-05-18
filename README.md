@@ -382,3 +382,52 @@ SELECT e1.EMP_ID, e1.EMP_NAME as employee_name, e2.EMP_NAME as manager_name
 FROM EMPLOYEE e1
 INNER JOIN EMPLOYEE e2 on e1.MANAGER_ID=e2.EMP_ID;
 ```
+
+# 16. SQL Functions in depth
+
+```sql
+--concatenate values of a column
+SELECT DEPT_ID, STRING_AGG(EMP_NAME, '|') as list_of_employees
+FROM EMPLOYEE
+GROUP BY DEPT_ID;
+
+--sort the concatenated values
+SELECT DEPT_ID, STRING_AGG(EMP_NAME, '|') WITHIN GROUP (ORDER BY SALARY) as list_of_employees
+FROM EMPLOYEE
+GROUP BY DEPT_ID;
+
+--date functions
+
+--get year from a datetime column
+SELECT ORDER_ID, ORDER_DATE, DATEPART(YEAR, ORDER_DATE) as year_of_order_date,
+DATEPART(month, ORDER_DATE) as month_of_year,
+DATENAME(month, ORDER_DATE) as month_name
+FROM ORDERS
+WHERE DATEPART(YEAR, ORDER_DATE) = 2020;
+
+--add days, weeks, months etc to a datetime
+SELECT ORDER_ID, ORDER_DATE,
+DATEADD(day, 5, ORDER_DATE) as ORDER_DATE_5, --add 5 days
+DATEADD(week, 5, ORDER_DATE) as ORDER_DATE_WEEK_5, --add 5 wk
+DATEADD(day, -5, ORDER_DATE) as ORDER_DATE_MINUS_5 --minus 5 days.
+FROM ORDERS;
+
+--diff of dates
+SELECT ORDER_ID, ORDER_DATE, SHIP_DATE,
+DATEDIFF(day, ORDER_DATE, SHIP_DATE) as date_diff_days,
+DATEDIFF(week, ORDER_DATE, SHIP_DATE) as date_diff_week
+FROM ORDERS;
+```
+
+# 14. CASE
+
+```sql
+SELECT ORDER_ID, PROFIT,
+CASE
+WHEN PROFIT < 100 THEN 'Low Profit'
+WHEN PROFIT < 250 THEN 'Medium Profit'
+WHEN PROFIT < 400 THEN 'High Profit'
+ELSE 'Very High Profit'
+END AS PROFIT_CATEGORY
+FROM ORDERS;
+```
