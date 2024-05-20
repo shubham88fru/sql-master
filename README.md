@@ -429,6 +429,13 @@ CONCAT(ORDER_ID, '-', CUSTOMER_NAME) as first_pos, --concatenate order id and cu
 REPLACE(ORDER_ID, 'CA', 'PB') as replaced, --replace all occurrences of CA with PB.
 TRANSLATE(CUSTOMER_NAME, 'AG', 'TP') as translated, --change ocurrences of 'A' to 'G' and occurences of 'T' to 'P'
 REVERSE(CUSTOMER_NAME) as reversed, --reverse the string.
+
+--null handling functions
+SELECT ORDER_ID,
+ISNULL(CITY, 'unknown') as is_null_city, --if city value is null, show 'unknown'.
+COALESCE(CITY, 'unknown') as coalesce_city, --if city value is null, show 'unknown'.
+COALESCE(CITY, STATE, REGION, 'unknown') as multiple_col, --if city is null, check state, if state is also null, check region, and if that is also null, return unknown.
+FROM ORDERS;
 ```
 
 # 14. CASE
