@@ -417,6 +417,18 @@ SELECT ORDER_ID, ORDER_DATE, SHIP_DATE,
 DATEDIFF(day, ORDER_DATE, SHIP_DATE) as date_diff_days,
 DATEDIFF(week, ORDER_DATE, SHIP_DATE) as date_diff_week
 FROM ORDERS;
+
+--string functions
+SELECT ORDER_ID, CUSTOMER_NAME,
+LEN(CUSTOMER_NAME) as len_name, --length of string
+LEFT(CUSTOMER_NAME,4) as name_4, --4 chars from left.
+RIGHT(CUSTOMER_NAME, 5) as name_5, --5 chars from right.
+SUBSTRING(CUSTOMER_NAME, 4,5) as substr45, --substring 5 chars from index 4.
+CHARINDEX(' ', CUSTOMER_NAME) as space_pos, --first index of ' '
+CONCAT(ORDER_ID, '-', CUSTOMER_NAME) as first_pos, --concatenate order id and customer name.
+REPLACE(ORDER_ID, 'CA', 'PB') as replaced, --replace all occurrences of CA with PB.
+TRANSLATE(CUSTOMER_NAME, 'AG', 'TP') as translated, --change ocurrences of 'A' to 'G' and occurences of 'T' to 'P'
+REVERSE(CUSTOMER_NAME) as reversed, --reverse the string.
 ```
 
 # 14. CASE
