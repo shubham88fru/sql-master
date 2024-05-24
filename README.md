@@ -455,3 +455,33 @@ ELSE 'Very High Profit'
 END AS PROFIT_CATEGORY
 FROM ORDERS;
 ```
+
+# 15. UNION, INTERSECT, EXCEPT
+
+```sql
+--combine similar tables together into one tables. Don't confuse
+-- with joins. For UNION to work, the two tables should have
+--same num of columns in their respective selects, and the data type of columns should be compatible.
+SELECT * FROM ORDERS_WEST
+UNION ALL --combine all rows from each table, no matter if duplicate.
+SELECT * FROM ORDERS_EAST;
+
+
+SELECT * FROM ORDERS_WEST
+UNION -- a simple union will ignore duplicate rows. Only uniques rows from each table will be present in the output table.
+SELECT * FROM ORDERS_EAST;
+
+SELECT * FROM ORDERS_EAST
+INTERSECT --get common rows from both the tables.
+SELECT * FROM ORDERS_EAST;
+
+-- select all rows in orders_east except the ones that are
+--also present in orders_east.
+SELECT * FROM ORDERS_EAST
+EXCEPT
+SELECT * FROM ORDERS_EAST;
+
+-- only `UNION ALL` gives everything, be it duplicate or now.
+--all others like `UNION`, `EXCEPT`, `INTERSECT` will never give
+--rows that are duplicate even if they qualify.
+```
