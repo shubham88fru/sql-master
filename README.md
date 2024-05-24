@@ -436,6 +436,11 @@ ISNULL(CITY, 'unknown') as is_null_city, --if city value is null, show 'unknown'
 COALESCE(CITY, 'unknown') as coalesce_city, --if city value is null, show 'unknown'.
 COALESCE(CITY, STATE, REGION, 'unknown') as multiple_col, --if city is null, check state, if state is also null, check region, and if that is also null, return unknown.
 FROM ORDERS;
+
+--cast and round
+SELECT TOP 5 ORDER_ID, CAST(SALES AS INT) AS SALES_INT,
+ROUND(SALES, 1) AS SALES_INT
+FROM ORDERS;
 ```
 
 # 14. CASE
