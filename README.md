@@ -104,7 +104,7 @@ ALTER TABLE AMAZON_ORDERS ADD USER_NAME VARCHAR(20);
 ALTER TABLE AMAZON_ORDERS DROP COLUMN CATEGORY;
 ```
 
-# 11. Constraints - NOT NULL, CHECK, UNIQUE, DEFAULT, PRIMARY KEY, FOREIGN KEY
+# 11. Constraints - NOT NULL, CHECK, UNIQUE, DEFAULT, PRIMARY KEY, FOREIGN KEY, REFERNCES
 
 (`UNIQUE` key cannot be duplicate but can be null, `PRIMARY KEY` is unique as well as not null. We can have multiple `UNIQUE` key constrains in a table, but there can only be one `PRIMARY` key constraint)
 (PRIMARY KEY constraint is `UNIQUE KEY + NOT NULL` contraint combined)
@@ -143,6 +143,19 @@ CREATE TABLE AMAZON_ORDERS
     DISCOUNT INTEGER CHECK (DISCOUNT <= 20),
     CATEGORY VARCHAR(20)
     PRIMARY KEY (ORDER_ID, PRODUCT_NAME)
+)
+
+--referential itegrity constraint (a.k.a Foreign key constraint)
+--if a column refernces a primary key (for reference constraint the target must be a a primary key) in other table, every value inserted must be present in the other table.
+
+--adding referential integrity constraint on `EMP.DEP_ID`
+--every value inserted to DEP_ID must be present in `DEPT.DEP_ID` (except if inserting null)
+--`DEPT.DEP_ID` must be aprimary key in DEPT for it to
+--be added as a reference constaint in any table.
+CREATE TABLE EMP (
+    EMP_ID INTEGER,
+    EMP_NAME VARCHAR(10),
+    DEP_ID INTEGER REFERENCES DEPT(DEP_ID)
 )
 ```
 
@@ -484,4 +497,22 @@ SELECT * FROM ORDERS_EAST;
 -- only `UNION ALL` gives everything, be it duplicate or now.
 --all others like `UNION`, `EXCEPT`, `INTERSECT` will never give
 --rows that are duplicate even if they qualify.
+```
+
+# 16. VIEWS
+
+```sql
+--views are kinda virtual tables.
+
+--create a view.
+CREATE VIEW ORDERS_VW AS
+SELECT * FROM ORDERS;
+
+--once created, run queries on the view.
+SELECT * FROM ORDERS_VW;
+
+--When a view is queried, it simply
+--executed the underlying query that was used to
+--create the view. So, views act as a nice abstraction
+--over complex queries, if you would.
 ```
