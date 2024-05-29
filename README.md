@@ -516,3 +516,47 @@ SELECT * FROM ORDERS_VW;
 --create the view. So, views act as a nice abstraction
 --over complex queries, if you would.
 ```
+
+# 17. Sub queries
+
+```sql
+--sub queries are needed when to get the final answer, we need
+--some intermediate result to operate on. We can consider the
+--result of a query a 'virtual' table and apply more queries
+--over it to get a final result.
+
+--find average sale per order.
+SELECT AVG(total_sales_per_order)
+FROM (
+    SELECT ORDER_ID, SUM(SALES) AS total_sales_per_order
+    FROM ORDER
+    GROUP BY ORDER_ID
+) AS aggregated_by_orders
+
+
+--all orders whose sales is greater than avg sale per order.
+--My soln.
+SELECT ORDER_ID
+FROM (
+    SELECT ORDER_ID, AVG(total_sales_per_order) AS avg_sale_per_order
+    FROM (
+        SELECT ORDER_ID, SUM(SALES) AS total_sales_per_order
+        FROM ORDER
+        GROUP BY ORDER_ID
+    ) AS aggregated_by_orders
+)
+WHERE aggregated_by_orders.total_sales_per_order > avg_sale_per_order;
+
+--Ankit's soln.
+SELECT ORDER_ID
+FROM ORDERS
+GROUP BY ORDER_ID
+HAVING SUM(SALES) > (
+    SELECT AVG(total_sales_per_order) AS avg_sale_per_order
+    FROM (
+        SELECT ORDER_ID, SUM(SALES) AS total_sales_per_order
+        FROM ORDER
+        GROUP BY ORDER_ID
+    ) AS aggregated_by_orders
+)
+```
