@@ -559,4 +559,52 @@ HAVING SUM(SALES) > (
         GROUP BY ORDER_ID
     ) AS aggregated_by_orders
 )
+
+--We can use sub queries almost anywhere.
+--in select, where, joins etc.
+```
+
+# 18. Common Table Expressions (CTEs)
+
+```sql
+--CTEs are similar to subqueries with the slight
+--difference that the subqueries are moved uptop which makes
+-- the overall query kinda easier to read and follow.
+------------------------
+WITH DEP AS
+(
+    SELECT DEPT_ID, AVG(SALARY) AS AVG_DEP_SALARY
+    FROM EMPLOYEE
+    GROUP BY DEPT_ID
+)
+
+SELECT EMP.*, DEP.*
+FROM EMPLOYEE EMP
+INNER JOIN DEP
+ON EMP.DEPT_ID=DEP.DEPT_ID;
+------------------------
+
+------------------------
+--we can have multiple CTEs seperated by a comma.
+WITH DEP AS
+(
+    SELECT DEPT_ID, AVG(SALARY) AS AVG_DEP_SALARY
+    FROM EMPLOYEE
+    GROUP BY DEPT_ID
+),
+TOTAL_SALARY AS
+(
+    SELECT SUM(AVG_DEP_SALARY) AS TS
+    FROM DEP
+)
+
+SELECT E.*, D.*
+FROM EMPLOYEE E
+INNER JOIN DEP D
+ON E.DEPT_ID = D.DEPT_ID;
+-------------------------
+
+--we can convert almost any query written using
+--subqueries to use CTEs.
+
 ```
