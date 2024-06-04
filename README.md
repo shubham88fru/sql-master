@@ -608,3 +608,49 @@ ON E.DEPT_ID = D.DEPT_ID;
 --subqueries to use CTEs.
 
 ```
+
+# 19. Window analytical functions.
+
+```sql
+--When it comes to ranking use cases like TOP x etc.
+--we are limited to the standard methods (TOP 5 etc) giving
+--us results for the entire table. But what if we want such
+--stats `over` some window instead of the entire table?
+--thats where Window analytical functions are useful.
+
+--generate a ranking number (row number) based on the salary. i.e highest
+--salary has the lowest rank (1) and the lowest salary has the
+--least rank. NOTE here that the `window` is the entire table.
+SELECT *, ROW_NUMBER() OVER(ORDER BY SALARY DESC) AS rank
+FROM EMPLOYEE
+
+--generate similar ranking but this time for each department.
+--i.e. now the `window` is each department.
+SELECT *, ROW_NUMBER() OVER(PARTITION BY DEPT_ID ORDER BY SALARY DESC) AS rank
+FROM EMPLOYEE;
+
+---------------------------
+--select the top 2 highest salary employees in each department.
+WITH CTE AS (
+    SELECT *, ROW_NUMBER() OVER (PARTITION BY DEPT_ID ORDER BY SALARY  DESC, EMP_NAME ASC) AS RN
+    FROM EMPLOYEE
+)
+
+SELECT * FROM CTE
+WHERE RN <= 2;
+---------------------------
+
+--generate ranking, but same salary should result in same rank.
+--same salary will get same rank but the next lower salary will
+--will have  a rank after skipping a number (coz two salaries
+--got the same rank.)
+SELECT *, RANK() OVER(ORDER BY SALARY DESC) as rnk
+FROM EMPLOYEE;
+
+--generate the above for each group
+SELECT *, RANK() OVER(PARTITION BY DEPT_ID ORDER BY SALARY DESC) as rnk
+FROM EMPLOYEE;
+
+--dense rank is similar to rank but without skipping.
+
+```
