@@ -653,4 +653,31 @@ FROM EMPLOYEE;
 
 --dense rank is similar to rank but without skipping.
 
+--lead window function. Lead -- next.
+SELECT *,
+LEAD(SALARY, 1) OVER(ORDER BY SALARY DESC) as LEAD_SAL
+FROM EMPLOYEE;
+
+--if null, then use default value of 3rd param.
+SELECT *,
+LEAD(SALARY, 1, 9999) OVER(ORDER BY SALARY DESC) as LEAD_SAL
+FROM EMPLOYEE;
+
+--with partition
+SELECT *,
+LEAD(SALARY, 1, EMP_AGE) OVER(PARTITION BY DEPT_ID ORDER BY SALARY DESC) AS LEAD_SAL
+FROM EMPLOYEE;
+
+--lag window function is kinda reverse of lead. lag - previous.
+
+--lead/lag functions are useful in question relating to
+--year on year growth etc.
+
+--first_value and last_value window functions.
+--within each partition, gives the first and last value respectively.
+SELECT *,
+FIRST_VALUE(SALARY) OVER(PARTITION BY DEPT_ID ORDER BY EMP_NAME DESC) AS FIRST_VALUE,
+LAST_VALUE(SALARY) OVER(PARTITION BY DEPT_ID ORDER BY EMP_NAME DESC) AS LAST_VALUE
+FROM EMPLOYEE;
+
 ```
