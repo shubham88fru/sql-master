@@ -694,4 +694,30 @@ MAX(SALARY) OVER(PARTITION BY DEPT_ID) AS MAX_SALARY
 FROM EMPLOYEE;
 
 --However, if we use order by in the over clause (when using aggregation) then the result for each row will be running sum, running avg etc based on the order.
+
+--some more complicated ones.
+--(check the window functions lecture for revision)
+--for every current row, 1 preceeding and 1 next (including curr.)
+SELECT *,
+SUM(SALARY) OVER(PARTITION BY DEPT_ID ORDER BY EMP_ID ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING) AS ROLLING_3_SALARY
+FROM EMPLOYEE;
+
+--both columns below will have same values for each row.
+SELECT *,
+SUM(SALARY) OVER(PARTITION BY DEPT_ID) AS DEP_RUNNING_SALARY,
+SUM(SALARY) OVER(PARTITION BY DEPT_ID ORDER BY EMP_ID ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS TOTAL_SALARY
+FROM EMPLOYEE;
+
+--rolling 3 months sale
+---------------------------------
+WITH month_wise_sales AS
+(
+    SELECT DATEPART(YEAR, ORDER_DATE) AS YEAR_ORDER, DATEPART(MONTH, ORDER_DATE) AS MONTH_ORDER, SUM(SALES) AS TOTAL_SALES
+    FROM ORDERS
+    GROUP BY DATEPART(YEAR, ORDER_DATE), DATEPART(MONTH, ORDER_DATE)
+)
+SELECT YEAR_ORDER, MONTH_ORDER, TOTAL_SALES,
+SUM(TOTAL_SALES) OVER(ORDER BY YEAR_ORDER, MONTH_ORDER ROWS BETWEEN 2 PRECEDING AND CURRENT ROW) AS rolling_3_sales
+FROM month_wise_sales;
+---------------------------------
 ```
