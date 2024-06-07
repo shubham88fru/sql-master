@@ -681,3 +681,17 @@ LAST_VALUE(SALARY) OVER(PARTITION BY DEPT_ID ORDER BY EMP_NAME DESC) AS LAST_VAL
 FROM EMPLOYEE;
 
 ```
+
+# 20. Aggregation with window functions.
+
+```sql
+--find the avg salary, min, max etc in each department.
+--note we don't have to use order by here because doesn't matter
+--for aggregation. It mattered a hell lot when had ranking/ordering usecases like before.
+SELECT *,
+AVG(SALARY) OVER(PARTITION BY DEPT_ID) AS AVG_SALARY,
+MAX(SALARY) OVER(PARTITION BY DEPT_ID) AS MAX_SALARY
+FROM EMPLOYEE;
+
+--However, if we use order by in the over clause (when using aggregation) then the result for each row will be running sum, running avg etc based on the order.
+```
