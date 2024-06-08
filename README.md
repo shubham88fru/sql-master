@@ -721,3 +721,56 @@ SUM(TOTAL_SALES) OVER(ORDER BY YEAR_ORDER, MONTH_ORDER ROWS BETWEEN 2 PRECEDING 
 FROM month_wise_sales;
 ---------------------------------
 ```
+
+# 21. Procedures.
+
+```sql
+--procedures give us a way to run multiple queries, complex
+--queries at once as a group. It's anlogous to shell scripts.
+--One can run individual bash commands to acheive an objective,
+--or can combine them all in single, reusable script.
+
+----------------------------
+--create a procedure
+CREATE PROCEDURE SP_EMP
+AS
+SELECT * FROM EMPLOYEE
+
+--run the procedure
+exec SP_EMP;
+---------------------------
+
+--------------------------
+--accepting params
+CREATE PROCEDURE SP_EMP_2(@SALARY int)
+AS
+SELECT * FROM EMPLOYEE WHERE SALARY > @salary;
+
+--run
+exec SP_EMP @salary=100
+--------------------------
+
+--insert statements
+CREATE PROCEDURE SP_EMP_3(@SALARY int, @DEPT_ID int)
+AS
+INSERT INTO DEPT VALUES (800, 'HR1');
+SELECT * FROM EMPLOYEE WHERE SALARY > @SALARY AND DEPT_ID=@DEPT_ID;
+SELECT * FROM DEPT WHERE DEP_ID=@DEPT_ID;
+
+--In views, we can have only one select statement. But with
+--procedures, we have literally anything.
+```
+
+# 22. Functions
+
+```sql
+--custom functions
+CREATE FUNCTION fproduct(@a int, @b int)
+RETURNS integer
+AS
+BEGIN
+    RETURN (
+        SELECT @a*@b
+    )
+END
+```
