@@ -75,11 +75,19 @@ ORDER BY ORDER_DATE DESC, TOTAL_PRICE ASC;
 
 # 6. DDL (Data Definition Language)
 
-CREATE, DROP, ALTER
+```sql
+CREATE, DROP, ALTER, TRUNCATE
+
+--DDLs can't be rolledback. They are autocommit.
+```
 
 # 7. DML (Data Manipulation Language)
 
+```sql
 INSERT, UPDATE, DELETE
+
+--Untill we execute a commit, DMLs can be rolled back.
+```
 
 # 8. DQL (Data Query Language)
 
@@ -773,4 +781,41 @@ BEGIN
         SELECT @a*@b
     )
 END
+```
+
+# 23. Pivot/Unpivot
+
+```sql
+--pivot basically is process of converting rows to columns.
+--below is normally how we'd do if we want sum of sales in 2020 and 2021 for each category, as column.
+SELECT CATEGORY,
+SUM(CASE WHEN DATEPART(YEAR, ORDER_DATE)=2020 THEN SALES END) AS SALES_2020,
+SUM(CASE WHEN DATEPART(YEAR, ORDER_DATE)=2021 THEN SALES END) AS SALES_2021
+FROM ORDERS
+GROUP BY CATEGORY;
+
+--the same result can be obtained using pivot function as below
+SELECT *
+FROM (SELECT CATEGORY, DATEPART(YEAR, ORDER_DATE) AS YOD, SALES FROM ORDERS) t1
+PIVOT(SUM(SALES) FOR YOD IN ([2020], [2021])) AS t2
+```
+
+# 24. Misc.
+
+```sql
+--create a new table from results of a query.
+--below query will create a new table `ORDERS_EAST` (of the same
+--schema as the result of the query after removing `INSERT INTO ORDERS_EAST`)
+--and then insert each row into `ORDERS_EAST`
+--We can literally write any query that we would normally write and include
+--the `INSERT INTO <TABLE>` statement to put all the result into the new table.
+INSERT INTO ORDERS_EAST SELECT * FROM ORDERS WHERE REGION='East';
+
+--TRUNCATE statetement.
+--TRUNCATE is same as DELETE in the sense that it is used to
+--delete data from a table, however, with DELETE we can give where clause
+--etc. to control what is deleted and what is not, but we can't do it with
+--TRUNCATE. TRUNCATE will simply delete all rows from a table. It is like
+--running `DELETE FROM` without a where clause. Truncate is faster than delete.
+TRUNCATE TABLE ORDERS;
 ```
