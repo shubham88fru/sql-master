@@ -818,4 +818,23 @@ INSERT INTO ORDERS_EAST SELECT * FROM ORDERS WHERE REGION='East';
 --TRUNCATE. TRUNCATE will simply delete all rows from a table. It is like
 --running `DELETE FROM` without a where clause. Truncate is faster than delete.
 TRUNCATE TABLE ORDERS;
+
+--using joins in update statement
+UPDATE EMPLOYEE
+SET DEP_NAME=d.DEP_NAME
+FROM EMPLOYEE e
+INNER JOIN DEPT d ON e.DEPT_ID = d.DEP_ID;
+
+--exists and not exists clause.
+
+--whenever the query within exists returns atleast one row, exists
+--will return true and that particular row will be part of the output, otherwise it won't be.
+SELECT *
+FROM EMPLOYEE_BACK e
+WHERE EXISTS (SELECT _ FROM DEPT_BACK d WHERE e.DEPT_ID = d.DEP_ID);
+
+--not exits is reverse of exists. Basically whenever the query in parentheses returns true, that row will not be part of output.
+SELECT *
+FROM EMPLOYEE_BACK e
+WHERE NOT EXISTS (SELECT _ FROM DEPT_BACK d WHERE e.DEPT_ID=d.DEP_ID);
 ```
