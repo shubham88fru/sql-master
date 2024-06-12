@@ -91,7 +91,35 @@ INSERT, UPDATE, DELETE
 
 # 8. DQL (Data Query Language)
 
+```sql
 SELECT
+```
+
+# 8+. DCL (Data Control Language)
+
+```sql
+GRANT, REVOKE
+
+--e.g. of grant.
+
+--grant select and insert on employees table to `guest` user.
+GRANT SELECT, INSERT ON EMPLOYEES TO GUEST;
+
+--grant select and insert on employees to all users.
+GRANT SELECT, INSERT ON EMPLOYEES to PUBLIC;
+
+--grant select on all objects in dbo schema.
+GRANT SELECT ON schema::dbo TO GUEST;
+
+--revoke select and insert access on employee table from guest.
+REVOKE SELECT, INSERT ON EMPLOYEES FROM GUEST;
+```
+
+# 8++. TCL (Transaction Control Language)
+
+```sql
+COMMIT, ROLLBACK
+```
 
 # 9. Delete data (not table)
 
