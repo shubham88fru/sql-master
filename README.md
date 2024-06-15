@@ -866,3 +866,30 @@ SELECT *
 FROM EMPLOYEE_BACK e
 WHERE NOT EXISTS (SELECT _ FROM DEPT_BACK d WHERE e.DEPT_ID=d.DEP_ID);
 ```
+
+# 25. Perferomance and Indexes
+
+```sql
+
+--two kinds of indexes - Clustered and Non-clustered.
+--When we created a clustered index on a column, internally the
+--index sorts the column so that database can search the table in
+--binary search fashion. We can only have one clustered index, because we can only sort the rows of a table by one column at a time.
+
+--Non-clustered index is like a hashmap. When we create a non-clustered index on a column, internally a hashmap of sorts will be created where key will be the value in the column and value will be the address of the row of the table where the key resides. This way, finding a column value will be a O(1) lookup.
+
+--when we create a primary key in a table, by default a clustered index will be created on the primary key.
+
+--create a clustered index.
+--create clustered index `idx_cust` for the `emp_name` column
+--of emp_index table.
+create clustered index idx_cust on emp_index(emp_name);
+
+--create a nonclustered index.
+create nonclustered index idx_name on emp_index(emp_name);
+
+--drop an index (any - clustered/non-clustered)
+--drop the index named `idx_rn` from table emp_index.
+drop index idx_rn on emp_index;
+
+```
