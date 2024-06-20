@@ -892,4 +892,6 @@ create nonclustered index idx_name on emp_index(emp_name);
 --drop the index named `idx_rn` from table emp_index.
 drop index idx_rn on emp_index;
 
+--deleting duplicates from a table.
+
 ```
