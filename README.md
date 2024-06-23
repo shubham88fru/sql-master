@@ -895,3 +895,37 @@ drop index idx_rn on emp_index;
 --deleting duplicates from a table.
 
 ```
+
+# 26. Questions ans solns
+
+```sql
+--1. Write a query to print top 5 cities with highest spends
+--and their percentage contribution of total credit card spends.
+
+with cte1 as (
+    select city, sum(amount) as total_spend
+    from credit_card_transactions
+    group by city
+),
+total_spent as (
+    select sum(cast(amount as bigint)) as total_amount
+    from credit_card_transactions
+)
+select top 5 cte1.*, (total_spend*1.0/total_amount*100) as '% contri'
+from cte1, total_spent
+order by total_spend desc;
+
+--2. Write a query to print highest spend month and amount spent
+--in that month for each card type.
+--i.e. for each card_type, give the month, year of max spending.
+with cte as (
+    select card_type, datepart(year, transaction_date) yt,
+    datepart(month, transaction_date) mt, sum(amount) as total_spend
+    from credit_card_transactions
+    group by card_type, datepart(year, transaction_date), datepart(month, transaction_date)
+)
+select * from (
+    select *, rank() over(partition by card_type order by total_spend desc) as rn
+    from cte
+) a where rn = 1;
+```
