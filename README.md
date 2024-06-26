@@ -928,4 +928,27 @@ select * from (
     select *, rank() over(partition by card_type order by total_spend desc) as rn
     from cte
 ) a where rn = 1;
+
+--3. Write a query to print the transaction deatils (all columns from the table) for each card type when it reaches a cummulative of 1000000 total spends.
+with cte as (
+    select *, sum(amount) over (partition by card_type order by transaction_date) as total_spend
+    from credit_card_transactions
+)
+select * from (
+    select *, rank() over (partition by card_type order by total_spend) as rn
+    from cte where total_spend >= 1000000
+) a where rn = 1;
+
+--4. Write a query to find city which had lowest percentage spend for gold card type.
+with cte as (
+    select city, card_type, sum(amount) as amount
+    , sum(case when card_type='Gold' then amount end) as gold_amount
+    from credit_card_transactions
+    group by city, card_type
+)
+select city, sum(gold_amount)*1.0/sum(amount) as gold_ratio
+from cte
+group by city
+having sum(gold_amount) is not null
+order by gold_ratio;
 ```
