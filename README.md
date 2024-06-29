@@ -951,4 +951,27 @@ from cte
 group by city
 having sum(gold_amount) is not null
 order by gold_ratio;
+
+--5. Write a query to print 3 columns: city, highest_expense_type, lowest_expense_type. For each city.
+with cte as (
+    select city, exp_type, sum(amount) as total_amount from credit_card_transactions
+    group by city, exp_type
+)
+select city, max(case when rsc_asc=1 then exp_type end) as lowest_exp_type,
+min(case when rn_desc=1 then exp_type end) as highest_exp_type
+from
+(
+    select *
+    , rank() over(partition by city order by total_amount desc) rn_desc
+    , rank() over(partition by city order by total_amount asc) rn_asc
+    from cte
+) A
+group by city;
+
+--6. Write a query to find percentage contribution of spends by females for each expense type. (i.e. out of total by male and female, what share is female's)
+select exp_type,
+sum(case when gender='F' then amount else 0 end)*1.0/sum(amount) as percent_female_contri
+from credit_card_transactions
+group by exp_type
+order by total_amount desc;
 ```
