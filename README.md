@@ -974,4 +974,38 @@ sum(case when gender='F' then amount else 0 end)*1.0/sum(amount) as percent_fema
 from credit_card_transactions
 group by exp_type
 order by total_amount desc;
+
+--7. Which card and expense type combination saw highest month over month growth in Jan-2014
+with cte as (
+    select card_type,exp_type,datepart(year, transaction_date) yt,
+    datepart(month, transaction_date) mt, sum(amount) as total_spend
+    from credit_card_transactions
+    group by card_type, exp_type, datepart(year, transaction_date), datepart(month, transaction_date)
+)
+select top 1 *, (total_spend-prev_month_total_spend)*1.0/prev_month_spend as mom_growth
+from (
+    select *,
+    lag(total_spend, 1) over(partition by card_type, exp_type order by yt, mt) as prev_month_total_spend from cte) A
+where prev_month_total_spend is not null and yt=2014 and mt=1
+order by mom_growth desc;
+
+--8. during weekends which city has highest total spend to total num of transactions ratio.
+select top 1 city, sum(amount)*1.0/count(1) as ratio
+from credit_card_transactions
+where datepart(weekday, transaction_date) in (1, 7)
+group by city
+order by ration desc;
+
+--9. Which city took least number of days to reach its 500th transaction after the first transaction in that city.
+with cte as (
+    select *,
+    row_number() over(partition by city order by transaction_date, transaction_id) as rn
+    from credit_card_transactions
+)
+select top 1 city, datediff(day, min(transaction_date), max(transaction_date)) as datediff1
+from cte
+where rn = 1 or rn = 500
+group by city
+having count(1) = 2
+order by datediff1;
 ```
